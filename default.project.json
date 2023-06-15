@@ -20,6 +20,12 @@
         "ReplicatedStorage": {
             "shared": {
                 "$path": "src/shared"
+            },
+            "packages": {
+                "$path": "Packages"
+            },
+            "maps": {
+                "$path": "maps"
             }
         }
     }
