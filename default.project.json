@@ -1,0 +1,26 @@
+{
+    "name": "Paper-Planes",
+    "tree": {
+        "$className": "DataModel",
+
+        "StarterPlayer": {
+            "StarterPlayerScripts": {
+                "client": {
+                    "$path": "src/client"
+                }
+            }
+        },
+
+        "ServerScriptService": {
+            "server": {
+                "$path": "src/server"
+            }
+        },
+
+        "ReplicatedStorage": {
+            "shared": {
+                "$path": "src/shared"
+            }
+        }
+    }
+}
