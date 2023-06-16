@@ -6,3 +6,5 @@ realm = "shared"
 
 [dependencies]
 sift = "csqrl/sift@0.0.6"
+knit = "sleitnick/knit@1.5.1"
+signal = "sleitnick/signal@1.5.0"
