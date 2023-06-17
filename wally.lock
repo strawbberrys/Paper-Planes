@@ -13,6 +13,11 @@ version = "4.0.0"
 dependencies = []
 
 [[package]]
+name = "mattschrubb/fusion"
+version = "1.2.5"
+dependencies = []
+
+[[package]]
 name = "sleitnick/comm"
 version = "0.3.1"
 dependencies = [["Option", "sleitnick/option@1.0.4"], ["Promise", "evaera/promise@4.0.0"], ["Signal", "sleitnick/signal@1.5.0"]]
@@ -35,4 +40,4 @@ dependencies = []
 [[package]]
 name = "strawberrys/paper-planes"
 version = "0.1.0"
-dependencies = [["knit", "sleitnick/knit@1.5.1"], ["sift", "csqrl/sift@0.0.6"], ["signal", "sleitnick/signal@1.5.0"]]
+dependencies = [["fusion", "mattschrubb/fusion@1.2.5"], ["knit", "sleitnick/knit@1.5.1"], ["sift", "csqrl/sift@0.0.6"], ["signal", "sleitnick/signal@1.5.0"]]

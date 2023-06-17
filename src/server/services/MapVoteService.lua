@@ -1,9 +1,9 @@
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local packages = ReplicatedStorage.packages
 local Knit = require(packages.knit)
 local Signal = require(packages.signal)
-local Sift = require(packages.sift)
 
 local MapVoteService = Knit.CreateService({
     Name = "MapVoteService",
@@ -11,6 +11,8 @@ local MapVoteService = Knit.CreateService({
     mapSelection = nil,
     mapVotes = nil,
     mapVoteActive = false,
+
+    playerAddedConnection = nil,
 
     mapVoteStarted = Signal.new(),
     mapVoteStopped = Signal.new(),
@@ -39,6 +41,10 @@ function MapVoteService:startMapVote(mapSelection: {Model}, duration: number)
     self.mapVoteActive = true
     self.mapVoteStarted:Fire(mapVotes)
     self.Client.mapVoteStarted:FireAll(mapVotes)
+
+    self.playerAddedConnection = Players.PlayerAdded:Connect(function(player)
+        self.Client.mapVoteStarted:Fire(player, mapVotes)
+    end)
 
     task.delay(duration, self.stopMapVote, self)
 
@@ -105,6 +111,7 @@ function MapVoteService:stopMapVote()
     self.mapSelection = nil
     self.mapVoteStopped:Fire(mostVotedMap)
     self.Client.mapVoteStopped:FireAll(mostVotedMap)
+    self.playerAddedConnection:Disconnect()
 
     return mostVotedMap
 end

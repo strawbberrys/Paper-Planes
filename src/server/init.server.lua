@@ -4,9 +4,10 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local Match = require(ServerScriptService.server.Match)
 
 local Knit = require(ReplicatedStorage.packages.knit)
-local MapVoteService = require(ServerScriptService.server.MapVoteService)
-
+Knit.AddServices(script.services)
 Knit.Start():catch(warn):await()
+
+local MapVoteService = Knit.GetService("MapVoteService")
 
 local function runGame()
     MapVoteService:startMapVote({ReplicatedStorage.maps.bedroom}, 15)
@@ -16,7 +17,7 @@ local function runGame()
     print(`map vote ended: {mostVotedMap}`)
 end
 
-task.delay(5, runGame)
+runGame()
 
 print("Server started")
 
