@@ -2,66 +2,84 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local packages = ReplicatedStorage.packages
 local Fusion = require(packages.fusion)
+local Knit = require(packages.knit)
 
-local New = Fusion.New
+local MapVoteService = Knit.GetService("MapVoteService")
+
+local New, Value, ForValues = Fusion.New, Fusion.Value, Fusion.ForValues
 local Children = Fusion.Children
 
-local MapVoteButton = require(script.Parent.Parent.Parent.components.MapVoteButton)
+local MapVoteButton = require(script.MapVoteButton)
+
 local font = Font.fromId(12187607287)
 
-local function MapVoteUi(props)
-    local MapVoteButtons = {}
-    for index, mapVote in props.mapVotes do
-        local MapVoteButton = MapVoteButton({
-            image = mapVote.image,
-            mapName = mapVote.mapName,
-        })
+type Props = {}
 
-        table.insert(MapVoteButtons, MapVoteButton)
-    end
+local function MapVoteUi(props: Props)
+	local mapVoteActive = Value(false)
+	local mapVoteList = Value({})
+	local mapVoteButtons = ForValues(mapVoteList, function(mapData)
+		return MapVoteButton(mapData)
+	end, Fusion.doNothing)
 
-    local MapVoteFrame = New("Frame")({
-        BackgroundColor3 = Color3.fromRGB(0, 0, 0),
-        BackgroundTransparency = 0.3,
-        Name = "MapVoteFrame",
-        Size = UDim2.fromScale(1, 1),
-        ZIndex = 10000,
+	local MapVoteFrame = New("Frame")({
+		Name = "MapVoteFrame",
 
-        [Children] = {
-            New("TextLabel")({
-                AnchorPoint = Vector2.new(0.5, 0),
-                BackgroundTransparency = 1,
-                Position = UDim2.fromScale(0.5, 0.171),
-                Size = UDim2.fromScale(1, 0.085),
-                FontFace = font,
-                Text = "Vote for the next map!",
-                TextColor3 = Color3.fromRGB(255, 255, 255),
-                TextScaled = true,
-                TextStrokeTransparency = 0,
-            }),
+		BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+		BackgroundTransparency = 0.3,
+		Size = UDim2.fromScale(1, 1),
+		Visible = mapVoteActive,
+		ZIndex = 10000,
 
-            New("Frame")({
-                AnchorPoint = Vector2.new(0.5, 0.5),
-                AutomaticSize = Enum.AutomaticSize.X,
-                BackgroundTransparency = 1,
-                Position = UDim2.fromScale(0.5, 0.5),
-                Size = UDim2.fromScale(0, 0.171),
+		[Children] = {
+			New("TextLabel")({
+				Name = "Label",
 
-                [Children] = {
-                    New("UIListLayout")({
-                        Padding = UDim.new(0, 10), -- convert this to scale if possible
-                        FillDirection = Enum.FillDirection.Horizontal,
-                        HorizontalAlignment = Enum.HorizontalAlignment.Left,
-                        VerticalAlignment = Enum.VerticalAlignment.Center,
-                    }),
+				AnchorPoint = Vector2.new(0.5, 0),
+				BackgroundTransparency = 1,
+				Position = UDim2.fromScale(0.5, 0.171),
+				Size = UDim2.fromScale(1, 0.085),
+				FontFace = font,
+				Text = "Vote for the next map!",
+				TextColor3 = Color3.fromRGB(255, 255, 255),
+				TextScaled = true,
+				TextStrokeTransparency = 0,
+			}),
 
-                    unpack(MapVoteButtons),
-                }
-            }),
-        }
-    })
+			New("Frame")({
+				Name = "MapVoteList",
 
-    return MapVoteFrame
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				AutomaticSize = Enum.AutomaticSize.X,
+				BackgroundTransparency = 1,
+				Position = UDim2.fromScale(0.5, 0.5),
+				Size = UDim2.fromScale(0, 0.2),
+
+				[Children] = {
+					New("UIListLayout")({
+						Padding = UDim.new(0, 10), -- convert this to scale if possible
+						FillDirection = Enum.FillDirection.Horizontal,
+						HorizontalAlignment = Enum.HorizontalAlignment.Left,
+						VerticalAlignment = Enum.VerticalAlignment.Center,
+					}),
+
+					mapVoteButtons,
+				},
+			}),
+		},
+	})
+
+	MapVoteService.mapVoteStarted:Connect(function(mapList)
+		mapVoteList:set(mapList)
+		mapVoteActive:set(true)
+	end)
+
+	MapVoteService.mapVoteStopped:Connect(function(mostVotedMap)
+		mapVoteActive:set(false)
+		mapVoteList:set({})
+	end)
+
+	return MapVoteFrame
 end
 
 return MapVoteUi

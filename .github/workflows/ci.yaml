@@ -1,0 +1,33 @@
+name: CI
+
+on:
+    push:
+        branches:
+            - main
+            - dev
+
+
+jobs:
+    lint:
+        name: Lint
+        runs-on: unbuntu-latest 
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Lint
+              run: |
+                selene ./modules
+    
+    style:
+        name: Style
+        runs-on: unbuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+            
+            - name: Install Stylua
+              uses: JohnnyMorganz/stylua-action@1.0.0
+              with:
+                token: ${{ secrets.GITHUB_TOKEN }}
+                args: --check .

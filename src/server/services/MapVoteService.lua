@@ -6,118 +6,125 @@ local Knit = require(packages.knit)
 local Signal = require(packages.signal)
 
 local MapVoteService = Knit.CreateService({
-    Name = "MapVoteService",
+	Name = "MapVoteService",
 
-    mapSelection = nil,
-    mapVotes = nil,
-    mapVoteActive = false,
+	mapSelection = nil,
+	mapVotes = nil,
+	mapVoteActive = false,
 
-    playerAddedConnection = nil,
+	playerAddedConnection = nil,
 
-    mapVoteStarted = Signal.new(),
-    mapVoteStopped = Signal.new(),
+	mapVoteStarted = Signal.new(),
+	mapVoteStopped = Signal.new(),
 
-    Client = {
-        mapVoteStarted = Knit.CreateSignal(),
-        mapVoteStopped = Knit.CreateSignal(),
+	Client = {
+		mapVoteStarted = Knit.CreateSignal(),
+		mapVoteStopped = Knit.CreateSignal(),
 
-        voteAdded = Knit.CreateSignal(),
-        voteRemoved = Knit.CreateSignal(),
-    },
+		voteAdded = Knit.CreateSignal(),
+		voteRemoved = Knit.CreateSignal(),
+	},
 })
 
-function MapVoteService:startMapVote(mapSelection: {Model}, duration: number)
-    assert(not self.mapVoteActive, "only one map vote can be active at once.")
+--- Starts a map vote using the given maps.
+--- Each map model in mapSelection must have these attributes set: MapName, MapIcon
+function MapVoteService:startMapVote(mapSelection: { Model }, duration: number): boolean
+	assert(not self.mapVoteActive, "only one map vote can be active at once.")
 
-    local mapVotes = {}
+	local mapVotes = {}
+	local mapDetails = {}
 
-    for index, map in mapSelection do
-        local mapId = index
-        mapVotes[mapId] = setmetatable({}, {__mode = "v"})
-    end
+	for mapId, map in mapSelection do
+		local attributes = map:GetAttributes()
+		local mapName = attributes.MapName
+		local mapIcon = attributes.MapIcon
 
-    self.mapSelection = mapSelection
-    self.mapVotes = mapVotes
-    self.mapVoteActive = true
-    self.mapVoteStarted:Fire(mapVotes)
-    self.Client.mapVoteStarted:FireAll(mapVotes)
+		mapVotes[mapId] = setmetatable({}, { __mode = "v" })
+		mapDetails[mapId] = { mapName = mapName, mapIcon = mapIcon, mapId = mapId }
+	end
 
-    self.playerAddedConnection = Players.PlayerAdded:Connect(function(player)
-        self.Client.mapVoteStarted:Fire(player, mapVotes)
-    end)
+	self.mapSelection = mapSelection
+	self.mapVotes = mapVotes
+	self.mapVoteActive = true
+	self.mapVoteStarted:Fire(mapVotes)
+	self.Client.mapVoteStarted:FireAll(mapDetails)
 
-    task.delay(duration, self.stopMapVote, self)
+	self.playerAddedConnection = Players.PlayerAdded:Connect(function(player)
+		self.Client.mapVoteStarted:Fire(player, mapDetails)
+	end)
 
-    return true
+	task.delay(duration, self.stopMapVote, self)
+
+	return true
 end
 
 function MapVoteService:addVote(player: Player, mapId: number)
-    if not self.mapVoteActive then
-        return false
-    end
+	if not self.mapVoteActive then
+		return false
+	end
 
-    local mapVotes = self.mapVotes[mapId]
+	local mapVotes = self.mapVotes[mapId]
 
-    if not mapVotes then
-        return false
-    end
+	if not mapVotes then
+		return false
+	end
 
-    MapVoteService:removeVote(player)
-    table.insert(mapVotes, player)
-    self.Client.voteAdded:FireAll(player, mapId)
+	MapVoteService:removeVote(player)
+	table.insert(mapVotes, player)
+	self.Client.voteAdded:FireAll(player, mapId)
 
-    return true
+	return true
 end
 
 function MapVoteService:removeVote(player: Player)
-    if not self.mapVoteActive then
-        return false
-    end
+	if not self.mapVoteActive then
+		return false
+	end
 
-    local allMapVotes = self.mapVotes
+	local allMapVotes = self.mapVotes
 
-    for mapId, mapVotes in allMapVotes do
-        local target = table.find(mapVotes, player)
+	for mapId, mapVotes in allMapVotes do
+		local target = table.find(mapVotes, player)
 
-        if target then
-            table.remove(mapVotes, target)
-            self.Client.voteRemoved:FireAll(player, mapId)
+		if target then
+			table.remove(mapVotes, target)
+			self.Client.voteRemoved:FireAll(player, mapId)
 
-            return true
-        end
-    end
+			return true
+		end
+	end
 
-    return false
+	return false
 end
 
 function MapVoteService:stopMapVote()
-    assert(self.mapVoteActive, "there must be a map vote active first.")
+	assert(self.mapVoteActive, "there must be a map vote active first.")
 
-    local mapSelection = self.mapSelection
-    local mostVotedMap = { map = nil, mapId = nil, votes = -1 }
+	local mapSelection = self.mapSelection
+	local mostVotedMap = { map = nil, mapId = nil, votes = -1 }
 
-    for mapId, mapVotes in self.mapVotes do
-        local totalVotes = #mapVotes
+	for mapId, mapVotes in self.mapVotes do
+		local totalVotes = #mapVotes
 
-        if totalVotes > mostVotedMap.votes then
-            mostVotedMap.map = mapSelection[mapId]
-            mostVotedMap.mapId = mapId
-            mostVotedMap.votes = totalVotes
-        end
-    end
+		if totalVotes > mostVotedMap.votes then
+			mostVotedMap.map = mapSelection[mapId]
+			mostVotedMap.mapId = mapId
+			mostVotedMap.votes = totalVotes
+		end
+	end
 
-    self.mapVoteActive = false
-    self.mapVotes = nil
-    self.mapSelection = nil
-    self.mapVoteStopped:Fire(mostVotedMap)
-    self.Client.mapVoteStopped:FireAll(mostVotedMap)
-    self.playerAddedConnection:Disconnect()
+	self.mapVoteActive = false
+	self.mapVotes = nil
+	self.mapSelection = nil
+	self.mapVoteStopped:Fire(mostVotedMap)
+	self.Client.mapVoteStopped:FireAll(mostVotedMap)
+	self.playerAddedConnection:Disconnect()
 
-    return mostVotedMap
+	return mostVotedMap
 end
 
 function MapVoteService.Client:vote(player: Player, mapId: number)
-    return self.Server:addVote(player, mapId)
+	return self.Server:addVote(player, mapId)
 end
 
 return MapVoteService
