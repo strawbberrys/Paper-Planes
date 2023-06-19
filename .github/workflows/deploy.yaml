@@ -17,7 +17,7 @@ jobs:
               uses: ok-nick/setup-aftman@v0.3.0
             
             - name: Build place file
-              run: rojo build -o game.rbxl
+              run: rojo build -o build.rbxl
 
             - name: Publish experience
-              run: rbxcloud experience publish -f game.rbxl -p 13759051699 -u 4773678126 -t published -a ${{ secrets.RBLX_OPENCLOUD_PUBLISH }}
+              run: rbxcloud experience publish -f build.rbxl -p 13759051699 -u 4773678126 -t published -a ${{ secrets.RBLX_OPENCLOUD_PUBLISH }}
