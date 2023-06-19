@@ -8,19 +8,19 @@ local Children = Fusion.Children
 
 local MapVoteUi = require(script.MapVoteUi)
 
-local function Root(props)
-    local RootUi = New("Frame")({
-        Name = "Root",
+local function Root(_props)
+	local RootUi = New("Frame")({
+		Name = "Root",
 
-        BackgroundTransparency = 1,
-        Size = UDim2.fromScale(1, 1),
+		BackgroundTransparency = 1,
+		Size = UDim2.fromScale(1, 1),
 
-        [Children] = {
-            MapVoteUi({}),
-        }
-    })
+		[Children] = {
+			MapVoteUi({}),
+		},
+	})
 
-    return RootUi
+	return RootUi
 end
 
 return Root

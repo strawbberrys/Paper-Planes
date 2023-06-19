@@ -15,7 +15,7 @@ local font = Font.fromId(12187607287)
 
 type Props = {}
 
-local function MapVoteUi(props: Props)
+local function MapVoteUi(_props: Props)
 	local mapVoteActive = Value(false)
 	local mapVoteList = Value({})
 	local mapVoteButtons = ForValues(mapVoteList, function(mapData)
@@ -77,6 +77,7 @@ local function MapVoteUi(props: Props)
 	MapVoteService.mapVoteStopped:Connect(function(mostVotedMap)
 		mapVoteActive:set(false)
 		mapVoteList:set({})
+		print(mostVotedMap)
 	end)
 
 	return MapVoteFrame
