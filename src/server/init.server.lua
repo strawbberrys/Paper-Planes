@@ -10,14 +10,16 @@ Knit.Start():catch(warn):await()
 local MapVoteService = Knit.GetService("MapVoteService")
 
 local function runGame()
-	MapVoteService:startMapVote(
-		{ ReplicatedStorage.maps.bedroom, ReplicatedStorage.maps.bedroom, ReplicatedStorage.maps.bedroom },
-		15
-	)
-	print("Started map vote")
+	while true do
+		MapVoteService:startMapVote(
+			{ ReplicatedStorage.maps.bedroom, ReplicatedStorage.maps.bedroom, ReplicatedStorage.maps.bedroom },
+			15
+		)
+		print("Started map vote")
 
-	local mostVotedMap = MapVoteService.mapVoteStopped:Wait()
-	print(`map vote ended: {mostVotedMap}`)
+		local mostVotedMap = MapVoteService.mapVoteStopped:Wait()
+		print(`map vote ended: {mostVotedMap}`)
+	end
 end
 
 task.delay(15, runGame)
