@@ -34,4 +34,4 @@ jobs:
 
             - name: Run Stylua
               run: |
-                stylua ./src
+                stylua ./src --check
