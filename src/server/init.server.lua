@@ -21,7 +21,7 @@ local function runGame()
 					perRow = 3,
 					perColumn = 3,
 					layers = 6,
-					template = Instance.new("Model"),
+					template = ReplicatedStorage.maps.bedroomBox,
 				},
 			},
 		})

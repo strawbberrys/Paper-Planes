@@ -3,6 +3,74 @@
     "tree": {
         "$className": "DataModel",
 
+        "Lighting": {
+            "$properties": {
+                "Ambient": {
+                    "Color3uint8": [70, 70, 70]
+                },
+                "Brightness": 3,
+                "EnvironmentDiffuseScale": 1,
+                "EnvironmentSpecularScale": 1,
+                "GlobalShadows": true,
+                "OutdoorAmbient": {
+                    "Color3uint8": [70, 70, 70]
+                },
+                "ShadowSoftness": 0.2,
+                "Technology": "Future",
+                "ClockTime": 12,
+                "GeographicLatitude": 0
+            },
+
+            "Atmosphere": {
+                "$className": "Atmosphere",
+
+                "$properties": {
+                    "Density": 0.155,
+                    "Offset": 0.25,
+                    "Color": {
+                        "Color3uint8": [199, 199, 199]
+                    },
+                    "Decay": {
+                        "Color3uint8": [106, 112, 125]
+                    }
+                }
+            },
+
+            "Sky": {
+                "$className": "Sky",
+
+                "$properties": {
+                    "MoonTextureId": "rbxassetid://6444320592",
+                    "SkyboxBk": "rbxassetid://6444884337",
+                    "SkyboxDn": "rbxassetid://6444884785",
+                    "SkyboxFt": "rbxassetid://6444884337",
+                    "SkyboxLf": "rbxassetid://6444884337",
+                    "SkyboxRt": "rbxassetid://6444884337",
+                    "SkyboxUp": "rbxassetid://6412503613",
+                    "SunAngularSize": 11,
+                    "SunTextureId": "rbxassetid://6196665106"
+                }
+            },
+
+            "Bloom": {
+                "$className": "BloomEffect",
+
+                "$properties": {
+                    "Intensity": 1,
+                    "Threshold": 2
+                }
+            },
+
+            "SunRays": {
+                "$className": "SunRaysEffect",
+
+                "$properties": {
+                    "Intensity": 0.01,
+                    "Spread": 0.1
+                }
+            }
+        },
+    
         "Players": {
             "$properties": {
                 "CharacterAutoLoads": false

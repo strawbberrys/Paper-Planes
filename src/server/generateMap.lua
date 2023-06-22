@@ -3,7 +3,7 @@ export type MapConfig = {
 		perRow: number,
 		perColumn: number,
 		layers: number,
-		template: Model,
+		template: Part,
 	},
 }
 
@@ -12,12 +12,14 @@ local function generateBoxes(
 	perRow: number,
 	perColumn: number,
 	layers: number,
-	template: Model
+	template: Part
 ): Model
 	local boxes = Instance.new("Model")
 	boxes.Name = "Boxes"
 
 	local boxSize = Vector3.new(fillRegion.Size.X / perRow, fillRegion.Size.Y / layers, fillRegion.Size.Z / perColumn)
+
+	print(perRow, layers, perColumn)
 
 	for row = 1, perRow do
 		for layer = 1, layers do
@@ -25,7 +27,7 @@ local function generateBoxes(
 				local box = template:Clone()
 
 				box:PivotTo(
-					fillRegion.CFrame * CFrame.new(boxSize.X * (row - 1)),
+					fillRegion.CFrame * CFrame.new(boxSize.X * (row - 1), 0, 0),
 					boxSize.Y * (layer - 1),
 					boxSize.Z * (column - 1)
 				)
@@ -38,8 +40,8 @@ local function generateBoxes(
 	return boxes
 end
 
-local function generateMap(tempalte: Model, config: MapConfig): Model
-	local map = tempalte:Clone()
+local function generateMap(template: Model, config: MapConfig): Model
+	local map = template:Clone()
 	local table = map.MatchTable
 	local tableTop = table.TableTop
 

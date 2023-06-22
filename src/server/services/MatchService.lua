@@ -80,7 +80,7 @@ function MatchService:__startMatch(config: MatchConfig): boolean
 		self[property] = value
 	end
 
-	local map = config.map:Clone() -- generateMap(config.map, config.mapConfig)
+	local map = generateMap(config.map, config.mapConfig)
 	map:PivotTo(CFrame.identity)
 	map.Parent = workspace
 
