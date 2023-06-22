@@ -1,3 +1,4 @@
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local packages = ReplicatedStorage.packages
@@ -51,8 +52,6 @@ type MatchConfig = {
 	rounds: number,
 	--- The length of each round in seconds.
 	roundDuration: number,
-	--- The Players who will be participating in the Match.
-	contestants: { Player },
 	--- The configuration for the map generation.
 	mapConfig: generateMap.MapConfig,
 }
@@ -94,12 +93,15 @@ function MatchService:__startMatch(config: MatchConfig): boolean
 			local controller = utility.getRandomPlayer()
 			self.controller = controller
 
+			local contestants = Sift.Array.removeValue(Players:GetPlayers(), controller)
+
 			local roundDetails = {
 				duration = self.roundDuration,
 				controller = controller,
+				contestants = contestants,
 			}
 
-			utility.teleportPlayers(self.contestants, map.MatchTable.Boxes.BoxesTop.CFrame)
+			utility.teleportPlayers(contestants, map.MatchTable.Boxes.BoxesTop.CFrame)
 			utility.teleportPlayer(self.controller, map.MatchControllerSpawn.CFrame)
 
 			self.roundStarted:Fire(roundDetails)

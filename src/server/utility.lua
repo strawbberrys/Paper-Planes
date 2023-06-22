@@ -7,14 +7,14 @@ local Promise = require(packages.promise)
 local utility = {}
 
 function utility.loadCharacter(player: Player)
-	player:LoadCharacter()
+	task.defer(player.LoadCharacter, player)
 
 	return Promise.fromEvent(player.CharacterAppearanceLoaded)
 end
 
 function utility.teleportPlayer(player: Player, position: CFrame)
 	utility.loadCharacter(player):andThen(function(character: Model)
-		character:PivotTo(position)
+		task.defer(character.PivotTo, character, position)
 	end)
 end
 

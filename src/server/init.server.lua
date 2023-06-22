@@ -12,7 +12,6 @@ local function runGame()
 		local mapDetails = MapVoteService:doMapVote({ ReplicatedStorage.maps.bedroom }, 15)
 
 		MatchService:doMatch({
-			contestants = {},
 			roundDuration = 15,
 			rounds = 5,
 			map = mapDetails.map,
