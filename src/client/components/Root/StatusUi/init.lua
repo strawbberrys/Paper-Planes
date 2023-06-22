@@ -6,9 +6,9 @@ local Fusion = require(packages.fusion)
 local New, Value, Computed, Out = Fusion.New, Fusion.Value, Fusion.Computed, Fusion.Out
 local Children = Fusion.Children
 
-local Timer = require(script.Timer)
-local MenuButton = require(script.MenuButton)
 local HealthBar = require(script.HealthBar)
+local MenuButton = require(script.MenuButton)
+local Timer = require(script.Timer)
 
 type Props = {}
 
