@@ -45,4 +45,4 @@ dependencies = []
 [[package]]
 name = "strawberrys/paper-planes"
 version = "0.1.0"
-dependencies = [["fusion", "mattschrubb/fusion@1.2.5"], ["knit", "sleitnick/knit@1.5.1"], ["sift", "csqrl/sift@0.0.6"], ["signal", "sleitnick/signal@1.5.0"], ["t", "osyrisrblx/t@3.0.0"]]
+dependencies = [["fusion", "mattschrubb/fusion@1.2.5"], ["knit", "sleitnick/knit@1.5.1"], ["promise", "evaera/promise@4.0.0"], ["sift", "csqrl/sift@0.0.6"], ["signal", "sleitnick/signal@1.5.0"], ["t", "osyrisrblx/t@3.0.0"]]

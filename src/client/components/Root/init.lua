@@ -7,6 +7,7 @@ local New = Fusion.New
 local Children = Fusion.Children
 
 local MapVoteUi = require(script.MapVoteUi)
+local StatusUi = require(script.StatusUi)
 
 local function Root(_props)
 	local RootUi = New("Frame")({
@@ -17,6 +18,7 @@ local function Root(_props)
 
 		[Children] = {
 			MapVoteUi({}),
+			StatusUi({}),
 		},
 	})
 

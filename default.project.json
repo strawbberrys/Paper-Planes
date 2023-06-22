@@ -3,17 +3,9 @@
     "tree": {
         "$className": "DataModel",
 
-        "StarterPlayer": {
-            "StarterPlayerScripts": {
-                "client": {
-                    "$path": "src/client"
-                }
-            }
-        },
-
-        "ServerScriptService": {
-            "server": {
-                "$path": "src/server"
+        "Players": {
+            "$properties": {
+                "CharacterAutoLoads": false
             }
         },
 
@@ -26,6 +18,20 @@
             },
             "maps": {
                 "$path": "maps"
+            }
+        },
+
+        "StarterPlayer": {
+            "StarterPlayerScripts": {
+                "client": {
+                    "$path": "src/client"
+                }
+            }
+        },
+
+        "ServerScriptService": {
+            "server": {
+                "$path": "src/server"
             }
         }
     }

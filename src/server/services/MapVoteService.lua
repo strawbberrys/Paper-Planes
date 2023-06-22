@@ -5,6 +5,13 @@ local packages = ReplicatedStorage.packages
 local Knit = require(packages.knit)
 local Signal = require(packages.signal)
 
+--[=[
+	@class MapVoteService
+	@server
+	@tag Service
+
+	The service to handle map votes.
+]=]
 local MapVoteService = Knit.CreateService({
 	Name = "MapVoteService",
 
@@ -26,13 +33,37 @@ local MapVoteService = Knit.CreateService({
 	},
 })
 
---- Starts a map vote using the given maps.
---- Each map model in mapSelection must have these attributes set: MapName, MapIcon
-function MapVoteService:startMapVote(mapSelection: { Model }, duration: number): boolean
-	assert(not self.mapVoteActive, "only one map vote can be active at once.")
+--[=[
+	@class MapVoteService.Client
+	@client
+	@tag Service
+
+	The service to handle map votes.
+]=]
+
+--[=[
+	@type MapDetails { map: Model, mapId: number, votes: number, }
+	@within MapVoteService
+
+	The map details.
+]=]
+type MapDetails = {
+	map: Model,
+	mapId: number,
+	votes: number,
+}
+
+--[=[
+	Starts a map vote using the given maps.
+	Each map model in mapSelection must have these attributes set: MapName, MapIcon.
+
+	@private
+]=]
+function MapVoteService:__startMapVote(mapSelection: { Model }, duration: number): boolean
+	assert(not self.mapVoteActive, "only one map vote can be active at a time.")
 
 	local mapVotes = {}
-	local mapDetails = {}
+	local mapDetails = {} :: { MapDetails }
 
 	for mapId, map in mapSelection do
 		local attributes = map:GetAttributes()
@@ -46,6 +77,7 @@ function MapVoteService:startMapVote(mapSelection: { Model }, duration: number):
 	self.mapSelection = mapSelection
 	self.mapVotes = mapVotes
 	self.mapVoteActive = true
+
 	self.mapVoteStarted:Fire(mapVotes)
 	self.Client.mapVoteStarted:FireAll(mapDetails)
 
@@ -53,55 +85,22 @@ function MapVoteService:startMapVote(mapSelection: { Model }, duration: number):
 		self.Client.mapVoteStarted:Fire(player, mapDetails)
 	end)
 
-	task.delay(duration, self.stopMapVote, self)
+	task.delay(duration, MapVoteService.__stopMapVote, self)
 
 	return true
 end
 
-function MapVoteService:addVote(player: Player, mapId: number)
-	if not self.mapVoteActive then
-		return false
-	end
+--[=[
+	Stops the running match vote and cleans up.
+	Returns the most voted map details.
 
-	local mapVotes = self.mapVotes[mapId]
-
-	if not mapVotes then
-		return false
-	end
-
-	MapVoteService:removeVote(player)
-	table.insert(mapVotes, player)
-	self.Client.voteAdded:FireAll(player, mapId)
-
-	return true
-end
-
-function MapVoteService:removeVote(player: Player)
-	if not self.mapVoteActive then
-		return false
-	end
-
-	local allMapVotes = self.mapVotes
-
-	for mapId, mapVotes in allMapVotes do
-		local target = table.find(mapVotes, player)
-
-		if target then
-			table.remove(mapVotes, target)
-			self.Client.voteRemoved:FireAll(player, mapId)
-
-			return true
-		end
-	end
-
-	return false
-end
-
-function MapVoteService:stopMapVote()
+	@private
+]=]
+function MapVoteService:__stopMapVote(): MapDetails
 	assert(self.mapVoteActive, "there must be a map vote active first.")
 
 	local mapSelection = self.mapSelection
-	local mostVotedMap = { map = nil, mapId = nil, votes = -1 }
+	local mostVotedMap = { map = nil, mapId = nil, votes = -1 } :: MapDetails
 
 	for mapId, mapVotes in self.mapVotes do
 		local totalVotes = #mapVotes
@@ -123,8 +122,115 @@ function MapVoteService:stopMapVote()
 	return mostVotedMap
 end
 
+--[=[
+	Adds a vote to the mapId's vote list.
+
+	@private
+]=]
+function MapVoteService:__addVote(player: Player, mapId: number): boolean
+	if not self.mapVoteActive then
+		return false
+	end
+
+	local mapVotes = self.mapVotes[mapId]
+
+	if not mapVotes then
+		return false
+	end
+
+	table.insert(mapVotes, player)
+	self.Client.voteAdded:FireAll(player, mapId)
+
+	return true
+end
+
+--[=[
+	Removes a vote from the mapId's vote list.
+
+	@private
+]=]
+function MapVoteService:__removeVote(player: Player, mapId: number, index: number?): boolean
+	if not self.mapVoteActive then
+		return false
+	end
+
+	local mapVotes = self.mapVotes[mapId]
+
+	if not mapVotes then
+		return false
+	end
+
+	index = index or table.find(mapVotes, player)
+
+	if not index then
+		return false
+	end
+
+	table.remove(mapVotes, index)
+	self.Client.voteRemoved:FireAll(player, mapId)
+
+	return true
+end
+
+--[=[
+	Finds and removes every vote for the player.
+
+	@private
+]=]
+function MapVoteService:__removeAllVotesForPlayer(player: Player): boolean
+	local mapVotes = self.mapVotes
+
+	for mapId = 1, #mapVotes do
+		local index = table.find(mapVotes[mapId], player)
+
+		if index then
+			local success = MapVoteService:__removeVote(player, mapId, index)
+
+			if not success then
+				return false
+			end
+		end
+	end
+
+	return true
+end
+
+--[=[
+	Adds a vote to the mapId's vote list and removes any other vote the player has.
+]=]
+function MapVoteService:doVote(player: Player, mapId: number): boolean
+	local success1 = MapVoteService:__removeAllVotesForPlayer(player)
+
+	if not success1 then
+		return false
+	end
+
+	local success2 = MapVoteService:__addVote(player, mapId)
+
+	if not success2 then
+		return false
+	end
+
+	return true
+end
+
+--[=[
+	Does an entire map vote.
+
+	@yields
+	@return MapDetails -- Most voted map.
+]=]
+function MapVoteService:doMapVote(mapSelection: { Model }, duration: number): MapDetails
+	MapVoteService:__startMapVote(mapSelection, duration)
+
+	return MapVoteService.mapVoteStopped:Wait()
+end
+
+--[=[
+	Requests a vote to the server.
+]=]
 function MapVoteService.Client:vote(player: Player, mapId: number)
-	return self.Server:addVote(player, mapId)
+	return self.Server:doVote(player, mapId)
 end
 
 return MapVoteService
