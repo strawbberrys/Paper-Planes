@@ -20,7 +20,8 @@ local function runGame()
 				boxConfig = {
 					perRow = 3,
 					perColumn = 3,
-					layers = 6,
+					layers = 5,
+					boxHeight = 20,
 					template = ReplicatedStorage.maps.bedroomBox,
 				},
 			},
