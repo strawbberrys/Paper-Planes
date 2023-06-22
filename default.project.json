@@ -5,16 +5,12 @@
 
         "Lighting": {
             "$properties": {
-                "Ambient": {
-                    "Color3uint8": [70, 70, 70]
-                },
+                "Ambient": [0.274, 0.274, 0.274],
                 "Brightness": 3,
                 "EnvironmentDiffuseScale": 1,
                 "EnvironmentSpecularScale": 1,
                 "GlobalShadows": true,
-                "OutdoorAmbient": {
-                    "Color3uint8": [70, 70, 70]
-                },
+                "OutdoorAmbient": [0.274, 0.274, 0.274],
                 "ShadowSoftness": 0.2,
                 "Technology": "Future",
                 "ClockTime": 12,
@@ -27,12 +23,8 @@
                 "$properties": {
                     "Density": 0.155,
                     "Offset": 0.25,
-                    "Color": {
-                        "Color3uint8": [199, 199, 199]
-                    },
-                    "Decay": {
-                        "Color3uint8": [106, 112, 125]
-                    }
+                    "Color": [0.780, 0.780, 0.780],
+                    "Decay": [0.415, 0.439, 0.490]
                 }
             },
 
