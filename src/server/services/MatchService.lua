@@ -99,8 +99,8 @@ function MatchService:__startMatch(config: MatchConfig): boolean
 				controller = controller,
 			}
 
-			utility.teleportPlayers(self.contestants, CFrame.new(0, 100, 0))
-			utility.teleportPlayer(self.controller, CFrame.new(0, 100, 0))
+			utility.teleportPlayers(self.contestants, map.MatchTable.Boxes.BoxesTop.CFrame)
+			utility.teleportPlayer(self.controller, map.MatchControllerSpawn.CFrame)
 
 			self.roundStarted:Fire(roundDetails)
 			self.Client.roundStarted:FireAll(roundDetails)

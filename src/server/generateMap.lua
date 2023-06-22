@@ -10,7 +10,8 @@ export type MapConfig = {
 	boxConfig: BoxConfig,
 }
 
--- boxes don't actually get generated in this fill region, they just automatically size based on it. should update this later to actually use the fill region.
+-- Note that the fillRegion doesn't account for the y-axis, it is only for getting the x & z axis.
+-- The y-axis is generated automatically based on the layers given and boxHeight. (Maybe I should change this to automatically generate the box height based on fillRegion.Size.Y?)
 local function generateBoxes(fillRegion: Region3, boxConfig: BoxConfig): Model
 	local perRow = boxConfig.perRow
 	local perColumn = boxConfig.perColumn
@@ -35,6 +36,17 @@ local function generateBoxes(fillRegion: Region3, boxConfig: BoxConfig): Model
 		end
 	end
 
+	local boxesPosition, boxesSize = boxes:GetBoundingBox()
+
+	local boxesTop = Instance.new("Part")
+	boxesTop.Anchored = true
+	boxesTop.CanCollide = false
+	boxesTop.CFrame = boxesPosition + Vector3.new(0, boxesSize.Y / 2, 0)
+	boxesTop.Size = Vector3.new(boxesSize.X, 0, boxesSize.Z)
+	boxesTop.Transparency = 1
+	boxesTop.Name = "BoxesTop"
+	boxesTop.Parent = boxes
+
 	return boxes
 end
 
@@ -43,8 +55,11 @@ local function generateMap(template: Model, config: MapConfig): Model
 	local table = map.MatchTable
 	local tableTop = table.TableTop
 
-	local boxRegion =
-		Region3.new(tableTop.Position, tableTop.Position + Vector3.new(tableTop.Size.X, 0, tableTop.Size.Z))
+	local tableSizeY = tableTop.Size * Vector3.FromAxis(Enum.Axis.Y) / 2
+	local boxRegion = Region3.new(
+		(tableTop.Position - tableTop.Size / 2) + tableSizeY,
+		(tableTop.Position + tableTop.Size / 2) + tableSizeY
+	)
 
 	local boxes = generateBoxes(boxRegion, config.boxConfig)
 	boxes:PivotTo((tableTop.CFrame + ((tableTop.Size + boxes:GetExtentsSize()) / 2) * Vector3.FromAxis(Enum.Axis.Y)))
