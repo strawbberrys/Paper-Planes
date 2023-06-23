@@ -2,7 +2,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local packages = ReplicatedStorage.packages
-local Promise = require(packages.promise)
+local Promise = require(packages.Promise)
 
 local utility = {}
 

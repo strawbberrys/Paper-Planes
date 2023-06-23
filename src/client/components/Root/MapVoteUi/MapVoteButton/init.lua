@@ -1,8 +1,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local packages = ReplicatedStorage.packages
-local Fusion = require(packages.fusion)
-local Knit = require(packages.knit)
+local Fusion = require(packages.Fusion)
+local Knit = require(packages.Knit)
 
 local MapVoteService = Knit.GetService("MapVoteService")
 
@@ -19,7 +19,7 @@ type Props = {
 	mapId: number,
 }
 
-local function MapVoteButton(props: Props)
+local function MapVoteButton(props: Props): Instance
 	local playerIcons = Value({})
 	local playerImageLabels = ForValues(playerIcons, function(iconData)
 		return PlayerIcon({ imageId = iconData.imageId })

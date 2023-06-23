@@ -1,7 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local packages = ReplicatedStorage.packages
-local Fusion = require(packages.fusion)
+local Fusion = require(packages.Fusion)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -9,7 +9,7 @@ local Children = Fusion.Children
 local MapVoteUi = require(script.MapVoteUi)
 local StatusUi = require(script.StatusUi)
 
-local function Root(_props)
+local function Root(_props): Instance
 	local RootUi = New("Frame")({
 		Name = "Root",
 

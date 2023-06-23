@@ -3,6 +3,11 @@
 registry = "test"
 
 [[package]]
+name = "4x8matrix/console"
+version = "2.0.2"
+dependencies = [["Signal", "sleitnick/signal@1.5.0"]]
+
+[[package]]
 name = "csqrl/sift"
 version = "0.0.6"
 dependencies = []
@@ -45,4 +50,4 @@ dependencies = []
 [[package]]
 name = "strawberrys/paper-planes"
 version = "0.1.0"
-dependencies = [["fusion", "mattschrubb/fusion@1.2.5"], ["knit", "sleitnick/knit@1.5.1"], ["promise", "evaera/promise@4.0.0"], ["sift", "csqrl/sift@0.0.6"], ["signal", "sleitnick/signal@1.5.0"], ["t", "osyrisrblx/t@3.0.0"]]
+dependencies = [["Console", "4x8matrix/console@2.0.2"], ["Fusion", "mattschrubb/fusion@1.2.5"], ["Knit", "sleitnick/knit@1.5.1"], ["Promise", "evaera/promise@4.0.0"], ["Sift", "csqrl/sift@0.0.6"], ["Signal", "sleitnick/signal@1.5.0"], ["t", "osyrisrblx/t@3.0.0"]]

@@ -1,7 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local packages = ReplicatedStorage.packages
-local Fusion = require(packages.fusion)
+local Fusion = require(packages.Fusion)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -15,7 +15,7 @@ type Props = {
 	Children: {},
 }
 
-local function ComponentBase(props: Props)
+local function ComponentBase(props: Props): Instance
 	return New("CanvasGroup")({
 		Name = props.Name,
 

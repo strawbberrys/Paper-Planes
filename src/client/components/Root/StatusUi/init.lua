@@ -1,9 +1,9 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local packages = ReplicatedStorage.packages
-local Fusion = require(packages.fusion)
+local Fusion = require(packages.Fusion)
 
-local New, Value, Computed, Out = Fusion.New, Fusion.Value, Fusion.Computed, Fusion.Out
+local New, Value, Computed, Observer, Out = Fusion.New, Fusion.Value, Fusion.Computed, Fusion.Observer, Fusion.Out
 local Children = Fusion.Children
 
 local HealthBar = require(script.HealthBar)
@@ -12,12 +12,13 @@ local Timer = require(script.Timer)
 
 type Props = {}
 
-local function StatusUi(_props: Props)
+local function StatusUi(_props: Props): Instance
 	local timerScale = Vector2.new(0.7, 7 / 15)
 	local menuButtonScale = Vector2.new(4 / 15, 7 / 15)
 	local healthBarScale = Vector2.new(1, 7 / 15)
 
 	local absoluteSize = Value(Vector2.new(0, 0))
+	local uiParent = Value()
 
 	local components = {
 		Timer({
@@ -51,6 +52,7 @@ local function StatusUi(_props: Props)
 		Size = UDim2.fromScale(0.163, 0.151),
 
 		[Out("AbsoluteSize")] = absoluteSize,
+		[Out("Parent")] = uiParent,
 
 		[Children] = {
 			New("UIGridLayout")({
@@ -67,6 +69,18 @@ local function StatusUi(_props: Props)
 			components,
 		},
 	})
+
+	local disconnect
+	disconnect = Observer(uiParent):onChange(function()
+		local currentParent = uiParent:get()
+
+		task.wait()
+		StatusFrame.Parent = script:FindFirstAncestorOfClass("ScreenGui")
+		task.wait()
+		StatusFrame.Parent = currentParent
+
+		disconnect()
+	end)
 
 	return StatusFrame
 end

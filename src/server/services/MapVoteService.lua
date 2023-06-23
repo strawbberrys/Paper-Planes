@@ -2,8 +2,8 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local packages = ReplicatedStorage.packages
-local Knit = require(packages.knit)
-local Signal = require(packages.signal)
+local Knit = require(packages.Knit)
+local Signal = require(packages.Signal)
 
 --[=[
 	@class MapVoteService

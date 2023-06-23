@@ -1,8 +1,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local packages = ReplicatedStorage.packages
-local Fusion = require(packages.fusion)
-local Knit = require(packages.knit)
+local Fusion = require(packages.Fusion)
+local Knit = require(packages.Knit)
 
 local MapVoteService = Knit.GetService("MapVoteService")
 
@@ -15,7 +15,7 @@ local font = Font.fromId(12187607287)
 
 type Props = {}
 
-local function MapVoteUi(_props: Props)
+local function MapVoteUi(_props: Props): Instance
 	local mapVoteActive = Value(false)
 	local mapVoteList = Value({})
 	local mapVoteButtons = ForValues(mapVoteList, function(mapData)

@@ -2,7 +2,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local packages = ReplicatedStorage.packages
-local Fusion = require(packages.fusion)
+local Fusion = require(packages.Fusion)
 
 local player = Players.LocalPlayer
 
@@ -18,7 +18,7 @@ type Props = {
 	LayoutOrder: number,
 }
 
-local function HealthBar(props: Props)
+local function HealthBar(props: Props): Instance
 	local health = Value(100)
 	local maxHealth = Value(100)
 	local healthPercentage = Computed(function()

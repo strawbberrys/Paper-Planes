@@ -1,7 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local packages = ReplicatedStorage.packages
-local Fusion = require(packages.fusion)
+local Fusion = require(packages.Fusion)
 
 local New = Fusion.New
 local Children = Fusion.Children
@@ -13,7 +13,7 @@ type Props = {
 	LayoutOrder: number,
 }
 
-local function MenuButton(props: Props)
+local function MenuButton(props: Props): Instance
 	return ComponentBase({
 		Name = "MenuButton",
 

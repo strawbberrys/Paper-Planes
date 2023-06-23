@@ -1,8 +1,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local packages = ReplicatedStorage.packages
-local Fusion = require(packages.fusion)
-local Knit = require(packages.knit)
+local Fusion = require(packages.Fusion)
+local Knit = require(packages.Knit)
 
 local MatchService = Knit.GetService("MatchService")
 
@@ -23,7 +23,7 @@ local function Timer(props: Props)
 	local minutesRemainingText = Value("00:00")
 
 	MatchService.roundStarted:Connect(function(roundDetails)
-		for totalSeconds = roundDetails.duration, 0, -1 do
+		for totalSeconds = roundDetails.duration, 1, -1 do
 			local minutesRemaining = math.floor(totalSeconds / 60)
 			local secondsRemaining = math.floor(totalSeconds % 60)
 			local formattedTime = string.format(timerFormat, minutesRemaining, secondsRemaining)

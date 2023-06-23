@@ -2,8 +2,8 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local packages = ReplicatedStorage.packages
-local Fusion = require(packages.fusion)
-local Knit = require(packages.knit)
+local Fusion = require(packages.Fusion)
+local Knit = require(packages.Knit)
 Knit.AddControllers(script.controllers)
 Knit.Start():catch(warn):await()
 
