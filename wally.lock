@@ -18,6 +18,11 @@ version = "4.0.0"
 dependencies = []
 
 [[package]]
+name = "lukadev-0/typed-promise"
+version = "4.0.2"
+dependencies = [["Promise", "evaera/promise@4.0.0"]]
+
+[[package]]
 name = "mattschrubb/fusion"
 version = "1.2.5"
 dependencies = []
@@ -50,4 +55,4 @@ dependencies = []
 [[package]]
 name = "strawberrys/paper-planes"
 version = "0.1.0"
-dependencies = [["Console", "4x8matrix/console@2.0.2"], ["Fusion", "mattschrubb/fusion@1.2.5"], ["Knit", "sleitnick/knit@1.5.1"], ["Promise", "evaera/promise@4.0.0"], ["Sift", "csqrl/sift@0.0.6"], ["Signal", "sleitnick/signal@1.5.0"], ["t", "osyrisrblx/t@3.0.0"]]
+dependencies = [["Console", "4x8matrix/console@2.0.2"], ["Fusion", "mattschrubb/fusion@1.2.5"], ["Knit", "sleitnick/knit@1.5.1"], ["Promise", "lukadev-0/typed-promise@4.0.2"], ["Sift", "csqrl/sift@0.0.6"], ["Signal", "sleitnick/signal@1.5.0"], ["t", "osyrisrblx/t@3.0.0"]]

@@ -10,6 +10,8 @@ local Signal = require(packages.Signal)
 local generateMap = require(script.Parent.Parent.generateMap)
 local utility = require(script.Parent.Parent.utility)
 
+local PopupService = Knit.GetService("PopupService")
+
 local logger = Logger.new("MatchService")
 
 --[=[
@@ -21,7 +23,7 @@ local logger = Logger.new("MatchService")
 local MatchService = Knit.CreateService({
 	Name = "MatchService",
 
-	minimumPlayers = 2,
+	minimumPlayers = 1,
 
 	map = nil,
 	rounds = nil,
@@ -107,6 +109,12 @@ function MatchService:__startMatch(config: MatchConfig): boolean
 	Promise.new(function(resolve)
 		for _round = 1, self.rounds do
 			self:__doRound()
+
+			PopupService:createPopup({
+				title = "Intermission",
+				description = "Short intermission between rounds",
+				duration = 10,
+			}):await()
 		end
 
 		resolve(true)
@@ -187,7 +195,7 @@ function MatchService:__startRound()
 	for _, contestant: Player in contestants do
 		local characterAdded = if contestant.Character
 			then Promise.resolve(contestant.Character)
-			else Promise.fromEvent(contestant.CharacterAdded)
+			else Promise.fromEvent(contestant.CharacterAdded :: any)
 
 		characterAdded:andThen(function(character: Model)
 			local humanoidAdded = Promise.try(character.WaitForChild, character, "Humanoid")

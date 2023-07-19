@@ -9,7 +9,7 @@ local utility = {}
 function utility.loadCharacter(player: Player)
 	task.defer(player.LoadCharacter, player)
 
-	return Promise.fromEvent(player.CharacterAppearanceLoaded)
+	return Promise.fromEvent(player.CharacterAppearanceLoaded :: any)
 end
 
 function utility.teleportPlayer(player: Player, position: CFrame)
